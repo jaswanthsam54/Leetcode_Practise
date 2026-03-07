@@ -1,36 +1,34 @@
 class Solution {
     public int minEatingSpeed(int[] piles, int h) {
-        int low = 1;
-        int high = 0;
+        // The range for our binary search
+        int left = 1;
+        int right = 0;
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
 
-        for (int p : piles)
-            high = Math.max(high, p);
+        int result = right;
 
-        int ans = high;
-
-        while (low <= high) {
-
-            int mid = low + (high - low) / 2;
-
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
             if (canFinish(piles, h, mid)) {
-                ans = mid;
-                high = mid - 1;
+                result = mid; // This speed works, but can we go slower?
+                right = mid - 1;
             } else {
-                low = mid + 1;
+                left = mid + 1; // Too slow, need to increase speed
             }
         }
-
-        return ans;
+        
+        return result;
     }
 
-    boolean canFinish(int[] piles, int h, int k) {
-
-        int hours = 0;
-
-        for (int p : piles) {
-            hours += Math.ceil((double)p / k);
+    private boolean canFinish(int[] piles, int h, int speed) {
+        long totalHours = 0; // Use long to prevent overflow
+        for (int pile : piles) {
+            // Equivalent to Math.ceil(pile / speed)
+            totalHours += (pile + speed - 1) / speed;
         }
-
-        return hours <= h;
+        return totalHours <= h;
     }
 }
