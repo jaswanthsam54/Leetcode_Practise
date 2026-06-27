@@ -1,23 +1,30 @@
 class Solution {
     public long maximumSubarraySum(int[] nums, int k) {
-         HashMap<Integer, Integer> freq = new HashMap<>();
-        long windowSum = 0;
-        long result = 0;
-        for (int i = 0; i < nums.length; i++) {
-            freq.put(nums[i], freq.getOrDefault(nums[i], 0) + 1);
-            windowSum += nums[i];
-            if (i >= k) {
-                int outgoing = nums[i - k];
-                windowSum -= outgoing;
-                freq.put(outgoing, freq.get(outgoing) - 1);
-                if (freq.get(outgoing) == 0) {
-                    freq.remove(outgoing);
-                }
+        Map<Integer, Integer> map = new HashMap<>();
+        long sum = 0;
+        long ans = 0;
+        int left = 0;
+
+        for (int right = 0; right < nums.length; right++) {
+
+            sum += nums[right];
+            map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+
+            if (right - left + 1 > k) {
+                sum -= nums[left];
+
+                map.put(nums[left], map.get(nums[left]) - 1);
+                if (map.get(nums[left]) == 0)
+                    map.remove(nums[left]);
+
+                left++;
             }
-            if (i >= k - 1 && freq.size() == k) {
-                result = Math.max(result, windowSum);
+
+            if (right - left + 1 == k && map.size() == k) {
+                ans = Math.max(ans, sum);
             }
         }
-        return result;
+
+        return ans;
     }
 }
