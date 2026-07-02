@@ -3,19 +3,18 @@ class Solution {
         if(s.length() != t.length()){
             return false;
         }
-        HashMap<Character,Integer>map=new HashMap<>();
-        for(char ch:s.toCharArray()){
-            map.put(ch,map.getOrDefault(ch,0)+1);
+        int[] freq=new int[26];
+        for(char c:s.toCharArray()){
+            freq[c-'a']++;
         }
-        for(char ch:t.toCharArray()){
-            if(!map.containsKey(ch)){
+        for(char c:t.toCharArray()){
+            freq[c-'a']--;
+        }
+        for(int count:freq){
+            if(count!=0){
                 return false;
             }
-            map.put(ch,map.get(ch)-1);
-            if(map.get(ch)==0){
-                map.remove(ch);
-            }
         }
-        return map.isEmpty();
+        return true;
     }
 }
