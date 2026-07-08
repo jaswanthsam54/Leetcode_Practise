@@ -3,34 +3,28 @@ class Solution {
 
         HashMap<Character, Integer> map = new HashMap<>();
 
-        // Count frequencies
+        // Count frequency
         for (char ch : s.toCharArray()) {
             map.put(ch, map.getOrDefault(ch, 0) + 1);
         }
 
+        // Convert map to list
+        List<Map.Entry<Character, Integer>> list =
+                new ArrayList<>(map.entrySet());
+
+        // Sort by frequency (descending)
+        Collections.sort(list, (a, b) -> b.getValue() - a.getValue());
+
+        // Build answer
         StringBuilder sb = new StringBuilder();
 
-        while (!map.isEmpty()) {
+        for (Map.Entry<Character, Integer> entry : list) {
+            char ch = entry.getKey();
+            int freq = entry.getValue();
 
-            char maxChar = ' ';
-            int maxFreq = 0;
-
-            // Find character with maximum frequency
-            for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-
-                if (entry.getValue() > maxFreq) {
-                    maxFreq = entry.getValue();
-                    maxChar = entry.getKey();
-                }
+            while (freq-- > 0) {
+                sb.append(ch);
             }
-
-            // Append maxChar maxFreq times
-            while (maxFreq-- > 0) {
-                sb.append(maxChar);
-            }
-
-            // Remove that character
-            map.remove(maxChar);
         }
 
         return sb.toString();
